@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{tech.name}} Page</title>
+    </head>
+
+    <body>
+        <h1>{{tech.name}}</h1>
+            <hr>
+            <div>
+                <img src="{{tech.image_url}}" class="logo" width="100px" alt="{{tech.name}} Logo" />
+            </div>
+            <hr>
+            <div>
+                {% for proj in projs %}
+                    {{loop.index}}. <a href="/projects/{{ proj.url_name }}">{{ proj.name }}</a> <br>
+                {% endfor %}
+            </div>
+    </body>
+</html>
