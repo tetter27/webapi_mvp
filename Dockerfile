@@ -1,5 +1,5 @@
 # Web APIサーバ用のビルド
-FROM rust:1.69-slim-buster as webapi
+FROM rust:1.69-slim-buster as server
 
 WORKDIR /usr/src/myapp
 RUN apt-get update && \
@@ -16,4 +16,4 @@ WORKDIR /usr/src/myapp
 RUN apt-get update && \
     apt install -y wait-for-it
 
-COPY . .
+COPY e2e/ .

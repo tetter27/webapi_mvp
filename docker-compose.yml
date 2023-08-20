@@ -1,18 +1,37 @@
 version: '3.7'
 services:
-    webapi:
+    server:
         build:
             context: .
-            target: webapi
+            target: server
         ports:
             - "8088:8088"
-        command: ["cargo", "build", "--release", "--", "cargo", "run", "--release"]
-        
+        command: >
+            /bin/sh -c "
+                cargo build --release &&
+                cargo run --release
+            "
+        networks:
+            - default
+            - shared-network
+
 
     client: 
         build:
             context: .
             target: client
         depends_on:
-            - webapi
-        command: ["wait-for-it", "-t", "0" "webapi:8088", "--", "cargo", "test", "--test", "e2e_test"]
+            - server
+        command: >
+            /bin/sh -c "
+                wait-for-it -t 0 server:8088 &&
+                cargo test --test e2e_test
+            "
+        networks:
+            - default
+            - shared-network
+
+
+networks:
+  shared-network:
+    external: true

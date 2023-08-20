@@ -1,0 +1,11 @@
+[package]
+name = "webapi_mvp_e2e"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+thirtyfour = "0.31.0"
+tokio = { version = "1", features = ["rt"] }
+
+[registries.crates-io]
+protocol = "sparse"
