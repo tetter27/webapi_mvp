@@ -11,11 +11,6 @@ services:
                 cargo build --release &&
                 cargo run --release
             "
-        networks:
-            - default
-            - shared-network
-
-
     client: 
         build:
             context: .
@@ -27,11 +22,3 @@ services:
                 wait-for-it -t 0 server:8088 &&
                 cargo test --test e2e_test
             "
-        networks:
-            - default
-            - shared-network
-
-
-networks:
-  shared-network:
-    external: true

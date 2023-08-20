@@ -33,9 +33,10 @@ mod E2Eテスト {
             }
         };
 
+        driver.quit().await.expect("quit error");
+
         assert!(html.contains("AWS"));
         assert!(html.contains("ProjectA"));
 
-        driver.quit().await.expect("quit error");
     }
 }
