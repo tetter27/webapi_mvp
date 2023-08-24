@@ -4,8 +4,8 @@ use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use dotenv::dotenv;
 use std::env;
-
 use diesel::result::Error;
+use chrono::{NaiveDateTime, DateTime, Local};
 
 // transaction
 pub fn create_connection() -> PgConnection {
@@ -17,8 +17,9 @@ pub fn create_connection() -> PgConnection {
     
 }
 
+
 // insert
-pub fn insert_project (
+pub fn insert_project(
         conn:     &PgConnection, 
         name:     &str, 
         url_name: &str)         -> Result<Project, Error> {
@@ -29,7 +30,7 @@ pub fn insert_project (
         .get_result(conn)
 }
 
-pub fn insert_technology (
+pub fn insert_technology(
         conn:      &PgConnection, 
         name:      &str, 
         url_name:  &str, 
@@ -41,7 +42,7 @@ pub fn insert_technology (
         .get_result(conn)
 }
 
-pub fn insert_adopt (
+pub fn insert_adopt(
         conn:            &PgConnection, 
         projects_id:     i64, 
         technologies_id: i64, 
@@ -52,11 +53,10 @@ pub fn insert_adopt (
         .values(&new_adopt)
         .get_result(conn)
 }
-// ---
 
 
 // get
-pub fn get_technology_by_url_name (  // 1
+fn get_technology_by_url_name(  // 1
         conn:     &PgConnection, 
         tech_url_name: &str)         -> Result<Technology, Error> {
 
@@ -65,7 +65,7 @@ pub fn get_technology_by_url_name (  // 1
         .first(conn)
 }
 
-pub fn get_projects_by_technologies_id (  // 2 & 3
+fn get_projects_by_technologies_id(  // 2 & 3
         conn:    &PgConnection, 
         tech_id: i64)           -> Result<Vec<Project>, Error> {
 
@@ -76,7 +76,7 @@ pub fn get_projects_by_technologies_id (  // 2 & 3
         .load(conn)
 }
 
-pub fn get_technology_page_by_url_name (  // 1 -> 2 & 3
+pub fn get_technology_page_by_url_name(  // 1 -> 2 & 3
         conn:     &PgConnection, 
         tech_url_name: &str)     -> Result<(Technology, Vec<Project>), Error> {
 
@@ -85,7 +85,7 @@ pub fn get_technology_page_by_url_name (  // 1 -> 2 & 3
 
     Ok((tech, projs))
 }
-// ---
+
 
 // test transaction
 pub fn test_transaction<F, R>(test_fn: F) -> Result<R, Error>
@@ -95,6 +95,26 @@ where
     let connection = create_connection();
     Ok(connection.test_transaction(|| test_fn(&connection)))
 }
+
+
+// for CLI command
+pub fn input_command_data (
+        conn: &PgConnection, 
+        proj_name: &str, 
+        proj_url_name: &str, 
+        tech_name: &str, 
+        tech_url_name: &str,
+        tech_image_url: &str)      -> Result<(), Error> {
+
+    let local_dt: DateTime<Local> = Local::now();
+    let naive_dt: NaiveDateTime = local_dt.naive_local();
+    let new_proj = insert_project(&conn, proj_name, proj_url_name)?;
+    let new_tech = insert_technology(&conn, tech_name, tech_url_name, tech_image_url)?;
+    let _ = insert_adopt(&conn, new_proj.id, new_tech.id, naive_dt)?;
+
+    Ok(())
+}
+
 
 #[cfg(test)]
 #[allow(non_snake_case)]

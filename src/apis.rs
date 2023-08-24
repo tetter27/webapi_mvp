@@ -9,7 +9,7 @@ async fn hello() -> impl Responder {
 }
 
 #[get("/technologies/{tech_name}")]
-pub async fn get_technologiy_page(
+async fn get_technologiy_page(
         tech_name: web::Path<String>) -> impl Responder {
     
     // DBへアクセスして技術ページに表示する情報を取得する
@@ -28,7 +28,7 @@ pub async fn get_technologiy_page(
     }
 }
 
-pub fn render_technology_page(
+fn render_technology_page(
         tech: Technology, 
         projs: Vec<Project>) -> Result<String, tera::Error> {
         

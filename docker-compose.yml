@@ -4,11 +4,14 @@ services:
         build:
             context: .
             target: server
+        depends_on:
+            - db
         ports:
-            - "8088:8088"
+            - "8080:8080"
         command: >
             /bin/sh -c "
                 cargo build --release &&
+                wait-for-it db:5432 &&
                 cargo run --release
             "
     client: 
@@ -17,8 +20,30 @@ services:
             target: client
         depends_on:
             - server
+            - selenium-chrome
         command: >
             /bin/sh -c "
-                wait-for-it -t 0 server:8088 &&
+                wait-for-it -t 0 server:8080 &&
+                wait-for-it selenium-chrome:4444 &&
                 cargo test --test e2e_test
             "
+    db:
+        image: postgres:15-bullseye
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=[ユーザ名]
+            - POSTGRES_PASSWORD=[パスワード]
+            - POSTGRES_DB=[DB名]
+        volumes:
+            - db_data:/var/lib/postgresql/data
+    selenium-chrome:
+        image: seleniarm/standalone-chromium:4.4.0-20220814
+        logging:
+            driver: none
+        ports:
+            - "4444:4444"
+            - "5900:5900"
+
+volumes:
+  db_data:

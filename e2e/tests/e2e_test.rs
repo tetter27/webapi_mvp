@@ -8,7 +8,7 @@ mod E2Eテスト {
 
     #[tokio::test]
     async fn projectsに対してpathを指定するとそのページの情報を取得できる() {
-        let url = "http://server:8088/technologies/aws";
+        let url = "http://server:8080/technologies/aws";
 
         let caps = DesiredCapabilities::chrome();
         // Seleniumで使用するWebDriverの生成
@@ -37,6 +37,5 @@ mod E2Eテスト {
 
         assert!(html.contains("AWS"));
         assert!(html.contains("ProjectA"));
-
     }
 }
