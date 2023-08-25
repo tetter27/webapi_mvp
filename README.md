@@ -1,12 +1,15 @@
 # webapi_mvp
 
+## 解説
+https://zenn.dev/tetter/books/webapi-mvp-book
+
 ## 使用方法
 1. Docker for Desktop (Windows/Mac) もしくは Docker Engine (Linux) をインストールする
-2. `.env` および `docker-compose.yml` の DB 環境を任意に設定する
+2. `.env` および `docker-compose.yml` の DB 環境を任意の値に設定する
 3. DB へ値を挿入する
     - 挿入方法
         - CLI コマンドを使用する
-            (使用方法は `cargo run --bin entry -- --help`で確認)
+            (使用方法は [こちら](https://zenn.dev/tetter/books/webapi-mvp-book/viewer/11_cli-command) の一番下を確認)
         - adminer を使用する
     - 挿入する値
         - technologies テーブル
