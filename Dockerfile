@@ -1,5 +1,5 @@
 # Web APIサーバのビルド
-FROM rust:1.69-slim as server
+FROM rust:1.70-slim as server
 
 WORKDIR /usr/src/myapp
 RUN apt-get update && \
@@ -10,7 +10,7 @@ RUN apt-get update && \
 COPY . .
 
 # E2Eテストを実行するクライアントのビルド
-FROM rust:1.69-slim-buster as client
+FROM rust:1.70-slim-buster as client
 
 WORKDIR /usr/src/myapp
 
